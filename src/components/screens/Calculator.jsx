@@ -9,7 +9,7 @@ function Calculator() {
   }
 
   function getEquationValue(prevState, input) {
-    console.log(prevState);
+    let prevInput = prevState[prevState.length - 1];
     let newEquation = prevState;
     if (input === 'CE') {
       return '';
@@ -21,10 +21,17 @@ function Calculator() {
     } else if (input === '=') {
       setAnswer(solveEquation());
       return '';
+    } else if (isOperator(input)) {
+      if (isOperator(prevInput)) {
+        return prevState;
+      }
     }
     newEquation += input;
-    console.log(newEquation);
     return newEquation;
+  }
+
+  function isOperator(input) {
+    return input === '+' || input === '-' || input === 'x' || input === '/';
   }
 
   function solveEquation() {
