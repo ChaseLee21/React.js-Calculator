@@ -1,15 +1,43 @@
+import { useState } from "react";
 
 function Calculator() {
+  const [equation, setEquation] = useState('');
+  const [answer, setAnswer] = useState('');
+
   function handleClick(e) {
-    console.log(e.target.value);
+    setEquation((prevState) => getEquationValue(prevState, e.target.value));
+  }
+
+  function getEquationValue(prevState, input) {
+    console.log(prevState);
+    let newEquation = prevState;
+    if (input === 'CE') {
+      return '';
+    } else if (input === 'C') {
+      return '';
+    } else if (input === 'Backspace') {
+      newEquation = equation.slice(0, -1);
+      return newEquation;
+    } else if (input === '=') {
+      setAnswer(solveEquation());
+      return '';
+    }
+    newEquation += input;
+    console.log(newEquation);
+    return newEquation;
+  }
+
+  function solveEquation() {
+    throw new Error('Function not implemented.');
   }
 
   return (
-    <div>
+    <div className="m-2">
       <h1>Calculator</h1>
       <div className="container text-center">
         <div className="row gap-2 my-2">
-          <input className="form-control col" type="text" readOnly></input>
+          <input className="form-control col" type="text" value={equation} readOnly></input>
+          <input className="form-control col" type="text" value={answer} readOnly></input>
         </div>
         <div className="row gap-2 my-2">
           <button className="btn btn-secondary col" value={'CE'} onClick={handleClick}>CE</button>
