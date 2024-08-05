@@ -6,6 +6,7 @@ function Calculator() {
   const [operator, setOperator] = useState('');
   const [equation, setEquation] = useState('');
   const [answer, setAnswer] = useState('');
+  const [history, setHistory] = useState([]);
 
   function handleClick(e) {
     const input = e.target.value;
@@ -82,27 +83,29 @@ function Calculator() {
   }
 
   function solveEquation () {
-    console.log(firstNumber, operator, currentNumber);
     if (firstNumber && operator && currentNumber) {
       setEquation((prev) => prev + currentNumber);
       switch (operator) {
         case '+':
           setAnswer(parseFloat(firstNumber) + parseFloat(currentNumber));
+          setHistory((prev) => [parseFloat(firstNumber) + '+' + parseFloat(currentNumber) + '=' + (parseFloat(firstNumber) + parseFloat(currentNumber)), ...prev]);
           break;
         case '-':
           setAnswer(parseFloat(firstNumber) - parseFloat(currentNumber));
+          setHistory((prev) => [parseFloat(firstNumber) + '-' + parseFloat(currentNumber) + '=' + (parseFloat(firstNumber) - parseFloat(currentNumber)), ...prev]);
           break;
         case 'x':
           setAnswer(parseFloat(firstNumber) * parseFloat(currentNumber));
+          setHistory((prev) => [parseFloat(firstNumber) + 'x' + parseFloat(currentNumber) + '=' + (parseFloat(firstNumber) * parseFloat(currentNumber)), ...prev]);
           break;
         case '/':
           setAnswer(parseFloat(firstNumber) / parseFloat(currentNumber));
+          setHistory((prev) => [parseFloat(firstNumber) + '/' + parseFloat(currentNumber) + '=' + (parseFloat(firstNumber) / parseFloat(currentNumber)), ...prev]);
           break;
       }
       setCurrentNumber('');
       setFirstNumber('');
       setOperator('');
-      console.log(answer);
     }
   }
 
@@ -147,6 +150,11 @@ function Calculator() {
           <button className="btn btn-secondary col" value={0} onClick={handleClick}>0</button>
           <button className="btn btn-secondary col" value={'.'} onClick={handleClick}>.</button>
           <button className="btn btn-secondary col" value={'='} onClick={handleClick}>=</button>
+        </div>
+        <div className="row gap-2 my-2">
+          {history && history.map((equation) => {
+            return <p key={equation}>{equation}</p>
+          })}
         </div>
       </div>
     </div>
