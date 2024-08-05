@@ -44,30 +44,30 @@ function Calculator() {
   function handleOtherInputs (input) {
     console.log(input);
     switch (input) {
-      case input === '+ | -':
+      case '+ | -':
         if (currentNumber) {
           setCurrentNumber((prev) => prev * -1);
         }
         break;
-      case input === '.':
+      case '.':
         if (!currentNumber.includes('.')) {
           setCurrentNumber((prev) => prev + '.');
         }
         break;
-      case input === 'C':
+      case 'C':
         setCurrentNumber('');
         break;
-      case input === 'CE':
+      case 'CE':
         setCurrentNumber('');
         setFirstNumber('');
         setSecondNumber('');
         setOperator('');
         setEquation('');
         break;
-      case input === 'Backspace':
+      case 'Backspace':
         setCurrentNumber((prev) => prev.slice(0, -1));
         break;
-      case input === '=':
+      case '=':
         console.log('solve');
         solveEquation();
         break;
