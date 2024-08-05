@@ -1,41 +1,104 @@
 import { useState } from "react";
 
 function Calculator() {
+  const [firstNumber, setFirstNumber] = useState('');
+  const [secondNumber, setSecondNumber] = useState('');
+  const [currentNumber, setCurrentNumber] = useState('');
+  const [operator, setOperator] = useState('');
   const [equation, setEquation] = useState('');
   const [answer, setAnswer] = useState('');
 
   function handleClick(e) {
-    setEquation((prevState) => getEquationValue(prevState, e.target.value));
+    const input = e.target.value;
+    const isNumber = !isNaN(parseInt(input));
+    const isOperator = input === '+' || input === '-' || input === 'x' || input === '/';
+    if (isOperator) {
+      handleOperatorInput(input);
+      return;
+    }
+    if (isNumber) {
+      handleNumberInput(input);
+      return;
+    }
+    handleOtherInputs(input);
   }
 
-  function getEquationValue(prevState, input) {
-    let prevInput = prevState[prevState.length - 1];
-    let newEquation = prevState;
-    if (input === 'CE') {
-      return '';
-    } else if (input === 'C') {
-      return '';
-    } else if (input === 'Backspace') {
-      newEquation = equation.slice(0, -1);
-      return newEquation;
-    } else if (input === '=') {
-      setAnswer(solveEquation());
-      return '';
-    } else if (isOperator(input)) {
-      if (isOperator(prevInput)) {
-        return prevState;
+  function handleNumberInput (input) {
+    setCurrentNumber((prev) => prev + parseInt(input));
+  }
+
+  function handleOperatorInput (input) {
+    if (answer) {
+      setFirstNumber(answer);
+      setSecondNumber('');
+    } else {
+      if (currentNumber) {
+        setOperator(input);
+        setFirstNumber(currentNumber);
+        setEquation(currentNumber + input);
+        setCurrentNumber('');
       }
     }
-    newEquation += input;
-    return newEquation;
   }
 
-  function isOperator(input) {
-    return input === '+' || input === '-' || input === 'x' || input === '/';
+  function handleOtherInputs (input) {
+    console.log(input);
+    switch (input) {
+      case input === '+ | -':
+        if (currentNumber) {
+          setCurrentNumber((prev) => prev * -1);
+        }
+        break;
+      case input === '.':
+        if (!currentNumber.includes('.')) {
+          setCurrentNumber((prev) => prev + '.');
+        }
+        break;
+      case input === 'C':
+        setCurrentNumber('');
+        break;
+      case input === 'CE':
+        setCurrentNumber('');
+        setFirstNumber('');
+        setSecondNumber('');
+        setOperator('');
+        setEquation('');
+        break;
+      case input === 'Backspace':
+        setCurrentNumber((prev) => prev.slice(0, -1));
+        break;
+      case input === '=':
+        console.log('solve');
+        solveEquation();
+        break;
+    }
   }
 
-  function solveEquation() {
-    throw new Error('Function not implemented.');
+  function solveEquation () {
+    console.log(firstNumber, operator, currentNumber);
+    if (firstNumber && operator && currentNumber) {
+      setSecondNumber(currentNumber);
+      setEquation((prev) => prev + currentNumber);
+      switch (operator) {
+        case '+':
+          setAnswer(parseFloat(firstNumber) + parseFloat(currentNumber));
+          break;
+        case '-':
+          setAnswer(parseFloat(firstNumber) - parseFloat(currentNumber));
+          break;
+        case 'x':
+          setAnswer(parseFloat(firstNumber) * parseFloat(currentNumber));
+          break;
+        case '/':
+          setAnswer(parseFloat(firstNumber) / parseFloat(currentNumber));
+          break;
+      }
+      setCurrentNumber('');
+      setFirstNumber('');
+      setSecondNumber('');
+      setOperator('');
+      console.log(answer);
+    }
   }
 
   return (
@@ -43,6 +106,7 @@ function Calculator() {
       <h1>Calculator</h1>
       <div className="container text-center">
         <div className="row gap-2 my-2">
+          <input className="form-control col" type="text" value={currentNumber} readOnly></input>
           <input className="form-control col" type="text" value={equation} readOnly></input>
           <input className="form-control col" type="text" value={answer} readOnly></input>
         </div>
