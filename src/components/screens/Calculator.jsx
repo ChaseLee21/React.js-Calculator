@@ -23,6 +23,12 @@ function Calculator() {
   }
 
   function handleNumberInput (input) {
+    if (answer) {
+      setEquation('');
+      setFirstNumber('');
+      setOperator('');
+      setAnswer('');
+    }
     setCurrentNumber((prev) => prev + parseInt(input));
   }
 
