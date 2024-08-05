@@ -2,7 +2,6 @@ import { useState } from "react";
 
 function Calculator() {
   const [firstNumber, setFirstNumber] = useState('');
-  const [secondNumber, setSecondNumber] = useState('');
   const [currentNumber, setCurrentNumber] = useState('');
   const [operator, setOperator] = useState('');
   const [equation, setEquation] = useState('');
@@ -29,8 +28,12 @@ function Calculator() {
 
   function handleOperatorInput (input) {
     if (answer) {
+      setEquation(answer + input);
       setFirstNumber(answer);
-      setSecondNumber('');
+      setOperator(input);
+      setAnswer('');
+      setCurrentNumber('');
+      setCurrentNumber('');
     } else {
       if (currentNumber) {
         setOperator(input);
@@ -42,7 +45,6 @@ function Calculator() {
   }
 
   function handleOtherInputs (input) {
-    console.log(input);
     switch (input) {
       case '+ | -':
         if (currentNumber) {
@@ -60,15 +62,14 @@ function Calculator() {
       case 'CE':
         setCurrentNumber('');
         setFirstNumber('');
-        setSecondNumber('');
         setOperator('');
         setEquation('');
+        setAnswer('');
         break;
       case 'Backspace':
         setCurrentNumber((prev) => prev.slice(0, -1));
         break;
       case '=':
-        console.log('solve');
         solveEquation();
         break;
     }
@@ -77,7 +78,6 @@ function Calculator() {
   function solveEquation () {
     console.log(firstNumber, operator, currentNumber);
     if (firstNumber && operator && currentNumber) {
-      setSecondNumber(currentNumber);
       setEquation((prev) => prev + currentNumber);
       switch (operator) {
         case '+':
@@ -95,7 +95,6 @@ function Calculator() {
       }
       setCurrentNumber('');
       setFirstNumber('');
-      setSecondNumber('');
       setOperator('');
       console.log(answer);
     }
@@ -106,9 +105,12 @@ function Calculator() {
       <h1>Calculator</h1>
       <div className="container text-center">
         <div className="row gap-2 my-2">
-          <input className="form-control col" type="text" value={currentNumber} readOnly></input>
           <input className="form-control col" type="text" value={equation} readOnly></input>
+          <p className="col-auto">=</p>
           <input className="form-control col" type="text" value={answer} readOnly></input>
+        </div>
+        <div className="row gap-2 my-2">
+          <input className="form-control col" type="text" value={currentNumber} readOnly></input>
         </div>
         <div className="row gap-2 my-2">
           <button className="btn btn-secondary col" value={'CE'} onClick={handleClick}>CE</button>
